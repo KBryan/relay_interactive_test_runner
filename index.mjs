@@ -58,7 +58,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     const accRelayP = new Promise((resolve, reject) => {
         accRelayProvide = resolve;
     });
-    if (isPlayer1 || !isPlayer1) {
+    if (acc !== null) {
         await Promise.all([
             backend.Alice(ctc, {
                 amt: stdlib.parseCurrency(25),
