@@ -50,6 +50,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
     const before = await getBalance();
     console.log(`${who} balance is: ${before}`);
+
     const beforeAlice = await getBalance(acc);
     const beforeBob = await getBalance(acc);
     const interact = {...stdlib.hasRandom };
@@ -59,34 +60,38 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
         accRelayProvide = resolve;
     });
     if (acc !== null) {
-        await Promise.all([
-            backend.Alice(ctc, {
-                amt: stdlib.parseCurrency(25),
-                getRelay: async() => {
-                    console.log(`Alice creates a Relay account.`);
-                    const accRelay = await stdlib.newTestAccount(stdlib.minimumBalance);
-                    console.log(`Alice shares it with Bob outside of the network. ${JSON.stringify(acc.networkAccount)}`);
-                    accRelayProvide(accRelay);
-                    return acc.networkAccount;
-                },
-            }),
-        ]);
-    } else {
-        (async() => {
-            console.log(`Bob waits for Alice to give him the information about the Relay account.`);
-            const accRelay = await accRelayP;
-            console.log(`Bob deposits some funds into the Relay to use it.`);
-            await stdlib.transfer(acc, accRelay, stdlib.parseCurrency(1));
-            console.log(`Bob attaches to the contract as the Relay.`);
-            const ctcRelay = accRelay.attach(backend, ctc.getInfo());
-            console.log(`Bob joins the application as the Relay.`);
-            return backend.Relay(ctcRelay, {
-                getBob: async() => {
-                    console.log(`Bob, acting as the Relay, gives his information.`);
-                    return accBob.networkAccount;
-                },
-            });
-        });
+        if (`${who}` == "Alice") {
+            console.log(`Alice stuff  ${who}`);
+            await Promise.all([
+                backend.Alice(ctc, {
+                    amt: stdlib.parseCurrency(25),
+                    getRelay: async() => {
+                        console.log(`Alice creates a Relay account.`);
+                        const accRelay = await stdlib.newTestAccount(stdlib.minimumBalance);
+                        console.log(`Alice shares it with Bob outside of the network. ${JSON.stringify(acc.networkAccount)}`);
+                        accRelayProvide(accRelay);
+                        return acc.networkAccount;
+                    },
+                }),
+            ]);
+        } else {
+
+            (async() => {
+                console.log(`Bob waits for Alice to give him the information about the Relay account.`);
+                const accRelay = await accRelayP;
+                console.log(`Bob deposits some funds into the Relay to use it.`);
+                await stdlib.transfer(acc, accRelay, stdlib.parseCurrency(1));
+                console.log(`Bob attaches to the contract as the Relay.`);
+                const ctcRelay = accRelay.attach(backend, ctc.getInfo());
+                console.log(`Bob joins the application as the Relay.`);
+                return backend.Relay(ctcRelay, {
+                    getBob: async() => {
+                        console.log(`Bob, acting as the Relay, gives his information.`);
+                        return accBob.networkAccount;
+                    },
+                });
+            })
+        };
     }
 
     const afterAlice = await getBalance(acc);
