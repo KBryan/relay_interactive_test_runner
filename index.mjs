@@ -53,9 +53,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
         accRelayProvide = resolve;
     });
     if (`${who}` != null) {
-        await Promise.all([
 
-        ])
         if (`${who}` == "Alice") {
             await Promise.all([
                 backend.Alice(ctc, {
@@ -71,22 +69,16 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
             ]);
         }
         if (`${who}` == "Relay") {
-            console.log('Hello');
             ctc = acc.deploy(backend);
 
-            const deployCtc = await ask(
-                `Paste Alice shared data`,
-                yesno
-            );
-            if (deployCtc) {
+            if (ctc != null) {
                 ctc = acc.deploy(backend);
                 const info = await ask(
-                    `Please paste the contract information:`,
+                    `Please pass account relay data:`,
                     JSON.parse
                 );
                 ctc = acc.attach(backend, info);
             }
-
 
             console.log(`Bob waits for Alice to give him the information about the Relay account.`);
             const accRelay = await ctc;
