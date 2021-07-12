@@ -81,7 +81,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
             }
 
             console.log(`Bob waits for Alice to give him the information about the Relay account.`);
-            const accRelay = await ctc;
+            const accRelay = await accRelayP;
             console.log(`Bob deposits some funds into the Relay to use it.`);
             await stdlib.transfer(acc, accRelay, stdlib.parseCurrency(1));
             console.log(`Bob attaches to the contract as the Relay.`);
