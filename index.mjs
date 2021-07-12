@@ -51,8 +51,6 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     const before = await getBalance();
     console.log(`${who} balance is: ${before}`);
 
-    const beforeAlice = await getBalance(acc);
-    const beforeBob = await getBalance(acc);
     const interact = {...stdlib.hasRandom };
 
     let accRelayProvide = null;
@@ -94,10 +92,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
         };
     }
 
-    const afterAlice = await getBalance(acc);
-    const afterBob = await getBalance(acc);
-
-    console.log(`Alice went from ${beforeAlice} to ${afterAlice}.`);
-    console.log(`Bob went from ${beforeBob} to ${afterBob}.`);
+     const after = await getBalance();
+    console.log(`${who} balance is: ${after}`);
 
 })();
